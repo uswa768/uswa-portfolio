@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { projects } from "../data/portfolioData";
-import { FiGithub, FiExternalLink, FiFolder } from "react-icons/fi";
+import { FiGithub, FiExternalLink } from "react-icons/fi";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -19,6 +19,8 @@ const getProjectImage = (id: string) => {
       return "/our_blooms.png";
     case "doist-todo":
       return "/doist_todo.png";
+    case "wedding-site":
+      return "/wedding_site.png";
     default:
       return "/dashboard_sales.png";
   }
@@ -292,17 +294,14 @@ export const Work: React.FC = () => {
                 ))}
               </div>
 
-              {/* Folder and Link icons */}
+              {/* Project Link icons */}
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "20px",
-                  marginTop: "4px",
+                  marginTop: "8px",
                 }}
               >
-                <FiFolder style={{ fontSize: "1.6rem", color: project.color, opacity: 0.8 }} />
-                
                 <div style={{ display: "flex", gap: "16px" }}>
                   <a
                     href={project.github}
