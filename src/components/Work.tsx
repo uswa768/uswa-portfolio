@@ -20,17 +20,8 @@ const getProjectImage = (id: string) => {
   }
 };
 
-const getProjectYear = (id: string) => {
-  switch (id) {
-    case "dashboard-sales":
-      return "2026";
-    case "dashboard-project":
-      return "2025";
-    case "crm-portal":
-      return "2024";
-    default:
-      return "2026";
-  }
+const getProjectYear = (_id: string) => {
+  return "2026";
 };
 
 export const Work: React.FC = () => {
@@ -183,7 +174,7 @@ export const Work: React.FC = () => {
         justifyContent: "flex-start",
         // paddingTop must clear the fixed navbar (80px) + breathing room
         // so the heading is never hidden behind the navbar when GSAP pins this section
-        paddingTop: "110px",
+        paddingTop: "100px",
         paddingBottom: "40px",
       }}
     >
@@ -353,7 +344,7 @@ export const Work: React.FC = () => {
                 style={{
                   width: "100%",
                   height: "100%",
-                  objectFit: "contain",
+                  objectFit: "cover",
                   objectPosition: "center top",
                   filter: "blur(12px) grayscale(100%)",
                   opacity: 0.4,

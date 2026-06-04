@@ -46,7 +46,7 @@ export const personalInfo: PersonalInfo = {
   email: "uswaasif768@gmail.com",
   github: "https://github.com/uswa768",
   linkedin: "https://linkedin.com/in/uswa-dev",
-  twitter: "https://twitter.com/uswa_dev",
+  twitter: "https://x.com/uswasif",
 };
 
 export const stats = [
@@ -88,34 +88,34 @@ export const skillCategories: SkillCategory[] = [
 
 export const projects: Project[] = [
   {
-    id: "dashboard-sales",
-    title: "Sales Analytics Dashboard",
-    description: "A premium dark-themed sales monitoring dashboard displaying dynamic metrics, product popularity rankings, and graphical customer statistics.",
-    tags: ["Data Vis", "Dashboard", "Admin Panel"],
-    tech: ["React", "TypeScript", "Vanilla CSS", "ChartJS"],
-    link: "#",
-    github: "https://github.com/uswa-dev/sales-dashboard",
-    color: "#06b6d4",
-  },
-  {
     id: "dashboard-project",
     title: "Project Workspace Kanban",
     description: "An interactive project management interface modeled after task boards, supporting drag-and-drop workspace cards and status sorting.",
     tags: ["Kanban", "Workspace", "Productivity"],
-    tech: ["React", "TypeScript", "TailwindCSS", "Framer Motion"],
-    link: "#",
-    github: "https://github.com/uswa-dev/kanban-workspace",
+    tech: ["React", "JavaScript", "TailwindCSS", "Framer Motion"],
+    link: "dashboard-one-dusky-one.vercel.app",
+    github: "https://github.com/uswa768/Dashboard-One",
     color: "#8b5cf6",
   },
   {
     id: "crm-portal",
-    title: "CRM Task Migrator",
-    description: "A high-performance CRM blog and article platform detailing software engineering migrations, task scaling, and WebSocket integration logs.",
+    title: "CRM SaaS",
+    description: "A modern, high-performance CRM SaaS platform with comprehensive customer relationship management, task scaling, and real-time WebSocket integration for seamless team collaboration.",
     tags: ["Engineering", "CRM Portal", "WebSockets"],
-    tech: ["React", "TypeScript", "Vanilla CSS", "GSAP"],
-    link: "#",
-    github: "https://github.com/uswa-dev/crm-task-migrator",
+    tech: ["React", "JavaScript", "TailwindCSS", "GSAP", "Framer Motion"],
+    link: "https://crm-saas-flame.vercel.app/",
+    github: "https://github.com/raheelanjum786/crm-saas",
     color: "#10b981",
+  },
+  {
+    id: "dashboard-sales",
+    title: "Sales Analytics Dashboard",
+    description: "A premium dark-themed sales monitoring dashboard displaying dynamic metrics, product popularity rankings, and graphical customer statistics.",
+    tags: ["Data Vis", "Dashboard", "Admin Panel"],
+    tech: ["React", "JavaScript", "TailwindCSS", "ChartJS"],
+    link: "dashboard-two-nine.vercel.app",
+    github: "https://github.com/uswa768/dashboard-two",
+    color: "#06b6d4",
   },
 ];
 

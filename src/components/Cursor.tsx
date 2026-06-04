@@ -1,144 +1,162 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 export const Cursor: React.FC = () => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [trail, setTrail] = useState({ x: 0, y: 0 });
-  const [hovered, setHovered] = useState(false);
+  const dotRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
   const [hoverType, setHoverType] = useState<string | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  
-  const mainRef = useRef<HTMLDivElement>(null);
-  const trailRef = useRef<HTMLDivElement>(null);
-  
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
-    // Check if it's a mobile device (touch support)
-    const isMobile = window.matchMedia("(max-width: 768px)").matches;
-    if (isMobile) return;
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia("(max-width: 768px)").matches);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    
+    // Don't register mouse handlers on mobile devices
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      return () => window.removeEventListener("resize", checkMobile);
+    }
 
-    setIsVisible(true);
+    // Live mouse position (updated synchronously in mousemove)
+    const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    // Ring lerp position
+    const ring = { x: mouse.x, y: mouse.y };
 
-    const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
+    let rafId: number;
+    let isVisible = false;
+
+    const show = () => {
+      if (!isVisible) {
+        isVisible = true;
+        if (dotRef.current) dotRef.current.style.opacity = "1";
+        if (ringRef.current) ringRef.current.style.opacity = "1";
+      }
+    };
+    const hide = () => {
+      isVisible = false;
+      if (dotRef.current) dotRef.current.style.opacity = "0";
+      if (ringRef.current) ringRef.current.style.opacity = "0";
     };
 
-    const handleMouseLeaveWindow = () => {
-      setIsVisible(false);
+    const onMouseMove = (e: MouseEvent) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      show();
+
+      // Move inner dot instantly (zero lag)
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${mouse.x - 4}px, ${mouse.y - 4}px, 0)`;
+      }
     };
 
-    const handleMouseEnterWindow = () => {
-      setIsVisible(true);
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseleave", handleMouseLeaveWindow);
-    document.addEventListener("mouseenter", handleMouseEnterWindow);
-
-    // Animation loop for trail interpolation (lerp)
-    let animationFrameId: number;
-    let currentX = 0;
-    let currentY = 0;
-
-    const animateTrail = () => {
-      // Lerp formula: current = current + (target - current) * factor
-      const targetX = position.x;
-      const targetY = position.y;
-      
-      currentX += (targetX - currentX) * 0.15;
-      currentY += (targetY - currentY) * 0.15;
-      
-      setTrail({ x: currentX, y: currentY });
-      animationFrameId = requestAnimationFrame(animateTrail);
-    };
-
-    animateTrail();
-
-    // Event Delegation to detect hover on interactive elements
-    const handleMouseOver = (e: MouseEvent) => {
+    // Hover detection
+    const onMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      
-      // Look for clickable elements
       const interactive = target.closest("a, button, [data-cursor]");
       if (interactive) {
-        setHovered(true);
-        const cursorType = interactive.getAttribute("data-cursor") || "link";
-        setHoverType(cursorType);
+        const type = interactive.getAttribute("data-cursor") || "link";
+        setHoverType(type);
       } else {
-        setHovered(false);
         setHoverType(null);
       }
     };
 
-    document.addEventListener("mouseover", handleMouseOver);
+    // Smooth ring lerp — runs every frame
+    const animate = () => {
+      // Lerp factor: 0.12 = smooth but not too laggy
+      ring.x += (mouse.x - ring.x) * 0.12;
+      ring.y += (mouse.y - ring.y) * 0.12;
+
+      if (ringRef.current) {
+        const size = ringRef.current.offsetWidth;
+        ringRef.current.style.transform = `translate3d(${ring.x - size / 2}px, ${ring.y - size / 2}px, 0)`;
+      }
+      rafId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    window.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseleave", hide);
+    document.addEventListener("mouseenter", show);
+    document.addEventListener("mouseover", onMouseOver);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseleave", handleMouseLeaveWindow);
-      document.removeEventListener("mouseenter", handleMouseEnterWindow);
-      document.removeEventListener("mouseover", handleMouseOver);
-      cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseleave", hide);
+      document.removeEventListener("mouseenter", show);
+      document.removeEventListener("mouseover", onMouseOver);
     };
-  }, [position.x, position.y]);
+  }, []);
 
-  if (!isVisible) return null;
+  // Derived styles based on hover state
+  const isHovered = hoverType !== null;
+  const ringSize = isHovered ? 56 : 32;
+  const ringColor = hoverType === "project" ? "var(--accent-cyan)" : "var(--accent-purple)";
+
+  if (isMobile) return null;
 
   return (
     <>
-      {/* Inner Dot Cursor */}
+      {/* Inner dot — zero lag, moves instantly */}
       <div
-        ref={mainRef}
+        ref={dotRef}
         style={{
           position: "fixed",
           top: 0,
           left: 0,
           width: "8px",
           height: "8px",
-          backgroundColor: hovered ? "var(--accent-cyan)" : "var(--accent-purple)",
           borderRadius: "50%",
-          transform: `translate3d(${position.x - 4}px, ${position.y - 4}px, 0) scale(${hovered ? 0.5 : 1})`,
-          transition: "transform 0.1s ease-out, background-color 0.3s ease",
+          backgroundColor: isHovered ? "var(--accent-cyan)" : "var(--accent-purple)",
+          transform: "translate3d(-100px, -100px, 0)",
           pointerEvents: "none",
           zIndex: 9999,
+          opacity: 0,
+          transition: "background-color 0.2s ease, transform 0s",
+          willChange: "transform",
         }}
       />
-      
-      {/* Outer Floating Ring Cursor */}
+
+      {/* Outer ring — smooth lerp follow */}
       <div
-        ref={trailRef}
+        ref={ringRef}
         style={{
           position: "fixed",
           top: 0,
           left: 0,
-          width: hovered ? "60px" : "32px",
-          height: hovered ? "60px" : "32px",
-          border: hovered
-            ? `1px solid ${hoverType === "project" ? "var(--accent-cyan)" : "var(--accent-purple)"}`
-            : "1px solid rgba(139, 92, 246, 0.4)",
-          background: hovered
+          width: `${ringSize}px`,
+          height: `${ringSize}px`,
+          border: `1.5px solid ${isHovered ? ringColor : "rgba(139, 92, 246, 0.5)"}`,
+          background: isHovered
             ? hoverType === "project"
-              ? "rgba(6, 182, 212, 0.05)"
-              : "rgba(139, 92, 246, 0.05)"
+              ? "rgba(6, 182, 212, 0.06)"
+              : "rgba(139, 92, 246, 0.06)"
             : "transparent",
           borderRadius: "50%",
-          transform: `translate3d(${trail.x - (hovered ? 30 : 16)}px, ${trail.y - (hovered ? 30 : 16)}px, 0)`,
-          transition: "width 0.3s cubic-bezier(0.19, 1, 0.22, 1), height 0.3s cubic-bezier(0.19, 1, 0.22, 1), background-color 0.3s, border-color 0.3s",
+          transform: "translate3d(-100px, -100px, 0)",
           pointerEvents: "none",
           zIndex: 9998,
+          opacity: 0,
+          transition: "width 0.25s cubic-bezier(0.19,1,0.22,1), height 0.25s cubic-bezier(0.19,1,0.22,1), border-color 0.2s, background 0.2s",
+          willChange: "transform",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          boxShadow: hovered 
-            ? `0 0 15px ${hoverType === "project" ? "var(--accent-cyan-glow)" : "var(--accent-purple-glow)"}` 
-            : "none",
+          boxShadow: isHovered ? `0 0 12px ${ringColor}55` : "none",
         }}
       >
-        {hovered && hoverType === "project" && (
-          <span style={{ 
-            fontSize: "10px", 
-            fontWeight: "bold", 
-            color: "var(--accent-cyan)", 
+        {isHovered && hoverType === "project" && (
+          <span style={{
+            fontSize: "9px",
+            fontWeight: 700,
+            color: "var(--accent-cyan)",
             fontFamily: "var(--font-heading)",
-            letterSpacing: "0.05em",
-            textTransform: "uppercase"
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            pointerEvents: "none",
           }}>
             View
           </span>

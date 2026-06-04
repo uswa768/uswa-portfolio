@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { FiGithub, FiLinkedin, FiMail } from "react-icons/fi";
+import React, { useState, useEffect, useRef } from "react";
+import { FiGithub, FiLinkedin, FiMail, FiMenu, FiX } from "react-icons/fi";
 import { personalInfo } from "../data/portfolioData";
 
 export const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("hero");
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   const navLinks = [
     { id: "hero", label: "Home" },
@@ -15,11 +17,9 @@ export const Navbar: React.FC = () => {
   ];
 
   useEffect(() => {
-    const NAVBAR_HEIGHT = 82; // px — matches the fixed header height
+    const NAVBAR_HEIGHT = 82;
 
     const getActiveSection = () => {
-      // Use getBoundingClientRect() — always accurate even when GSAP pins a section
-      // (pinned elements get position:fixed, breaking offsetTop chains)
       const sectionRects = navLinks
         .map((link) => {
           const el = document.getElementById(link.id);
@@ -28,7 +28,6 @@ export const Navbar: React.FC = () => {
         })
         .filter(Boolean) as { id: string; top: number }[];
 
-      // The active section is the last one whose top edge is at or above the navbar bottom
       let active = sectionRects[0]?.id ?? "hero";
       for (const section of sectionRects) {
         if (section.top <= NAVBAR_HEIGHT + 10) {
@@ -43,75 +42,195 @@ export const Navbar: React.FC = () => {
       setActiveSection(getActiveSection());
     };
 
-    // Run once on mount
     handleScroll();
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close drawer when clicking outside
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (drawerRef.current && !drawerRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
+
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
+    setMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80; // height of fixed navbar
+      const offset = 80;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
+      const offsetPosition = elementRect - bodyRect - offset;
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
       setActiveSection(id);
     }
   };
 
   return (
-    <header
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "80px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0 8%",
-        zIndex: 1000,
-        transition: "background-color 0.3s, border-color 0.3s, backdrop-filter 0.3s",
-        backgroundColor: scrolled ? "rgba(3, 7, 18, 0.7)" : "transparent",
-        backdropFilter: scrolled ? "blur(12px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(255, 255, 255, 0.05)" : "1px solid transparent",
-      }}
-    >
-      {/* Brand logo */}
-      <a
-        href="#hero"
-        onClick={(e) => handleNavClick(e, "hero")}
-        data-cursor="link"
+    <>
+      <header
         style={{
-          fontFamily: "var(--font-heading)",
-          fontSize: "1.5rem",
-          fontWeight: 800,
-          color: "#ffffff",
-          textDecoration: "none",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "64px",
           display: "flex",
           alignItems: "center",
-          gap: "4px",
+          justifyContent: "space-between",
+          padding: "0 6%",
+          zIndex: 1000,
+          transition: "background-color 0.3s, border-color 0.3s, backdrop-filter 0.3s",
+          backgroundColor: scrolled || menuOpen ? "var(--bg-primary)" : "transparent",
+          backdropFilter: scrolled || menuOpen ? "blur(16px)" : "none",
+          borderBottom: scrolled ? "1px solid var(--border-color)" : "1px solid transparent",
         }}
       >
-        <span>USWA</span>
-      </a>
+        {/* Brand */}
+        <a
+          href="#hero"
+          onClick={(e) => handleNavClick(e, "hero")}
+          data-cursor="link"
+          style={{
+            fontFamily: "var(--font-heading)",
+            fontSize: "1.45rem",
+            fontWeight: 800,
+            color: "var(--text-primary)",
+            textDecoration: "none",
+          }}
+        >
+          USWA
+        </a>
 
-      {/* Nav links */}
-      <nav
+        {/* ── Desktop Nav ── */}
+        <nav className="navbar-desktop">
+          {navLinks.map((link) => (
+            <a
+              key={link.id}
+              href={`#${link.id}`}
+              onClick={(e) => handleNavClick(e, link.id)}
+              data-cursor="link"
+              style={{
+                fontFamily: "var(--font-heading)",
+                fontSize: "0.92rem",
+                fontWeight: 500,
+                textDecoration: "none",
+                color: activeSection === link.id ? "var(--text-primary)" : "var(--text-secondary)",
+                position: "relative",
+                padding: "6px 0",
+                transition: "color 0.3s",
+              }}
+            >
+              {link.label}
+              <span
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "2px",
+                  backgroundColor: "var(--accent-purple)",
+                  transform: activeSection === link.id ? "scaleX(1)" : "scaleX(0)",
+                  transformOrigin: "left",
+                  transition: "transform 0.3s ease",
+                  boxShadow: "0 0 8px var(--accent-purple-glow)",
+                }}
+              />
+            </a>
+          ))}
+        </nav>
+
+        {/* ── Desktop Actions ── */}
+        <div className="navbar-desktop" style={{ gap: "18px" }}>
+          <a
+            href={personalInfo.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cursor="link"
+            style={{ color: "var(--text-secondary)", fontSize: "1.15rem", display: "flex", alignItems: "center", transition: "color 0.3s" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-primary)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
+          >
+            <FiGithub />
+          </a>
+          <a
+            href={personalInfo.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cursor="link"
+            style={{ color: "var(--text-secondary)", fontSize: "1.15rem", display: "flex", alignItems: "center", transition: "color 0.3s" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text-primary)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
+          >
+            <FiLinkedin />
+          </a>
+          <a
+            href="#contact"
+            onClick={(e) => handleNavClick(e, "contact")}
+            className="btn-neon"
+            style={{ padding: "8px 18px", fontSize: "0.82rem" }}
+          >
+            <FiMail style={{ fontSize: "0.95rem" }} />
+            <span>Hire Me</span>
+          </a>
+        </div>
+
+        {/* ── Mobile Hamburger Button ── */}
+        <button
+          className="navbar-hamburger"
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-label="Toggle menu"
+          style={{
+            background: "none",
+            border: "1px solid var(--border-color)",
+            borderRadius: "8px",
+            color: "var(--text-primary)",
+            fontSize: "1.3rem",
+            width: "40px",
+            height: "40px",
+            display: "none",          /* shown via CSS on mobile */
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            transition: "border-color 0.2s",
+          }}
+        >
+          {menuOpen ? <FiX /> : <FiMenu />}
+        </button>
+      </header>
+
+      {/* ── Mobile Drawer ── */}
+      <div
+        ref={drawerRef}
+        className="navbar-drawer"
         style={{
+          position: "fixed",
+          top: "64px",
+          left: 0,
+          width: "100%",
+          zIndex: 999,
+          background: "rgba(3, 7, 18, 0.97)",
+          backdropFilter: "blur(20px)",
+          borderBottom: "1px solid rgba(255,255,255,0.07)",
+          transform: menuOpen ? "translateY(0)" : "translateY(-110%)",
+          transition: "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+          padding: "24px 6%",
           display: "flex",
-          alignItems: "center",
-          gap: "32px",
+          flexDirection: "column",
+          gap: "8px",
         }}
       >
         {navLinks.map((link) => (
@@ -119,72 +238,67 @@ export const Navbar: React.FC = () => {
             key={link.id}
             href={`#${link.id}`}
             onClick={(e) => handleNavClick(e, link.id)}
-            data-cursor="link"
             style={{
               fontFamily: "var(--font-heading)",
-              fontSize: "0.95rem",
-              fontWeight: 500,
+              fontSize: "1.1rem",
+              fontWeight: 600,
               textDecoration: "none",
-              color: activeSection === link.id ? "#ffffff" : "var(--text-secondary)",
-              position: "relative",
-              padding: "6px 0",
-              transition: "color 0.3s",
+              color: activeSection === link.id ? "#fff" : "var(--text-secondary)",
+              padding: "14px 16px",
+              borderRadius: "10px",
+              background: activeSection === link.id ? "rgba(139,92,246,0.12)" : "transparent",
+              borderLeft: activeSection === link.id ? "3px solid var(--accent-purple)" : "3px solid transparent",
+              transition: "background 0.2s, color 0.2s",
             }}
           >
             {link.label}
-            {/* Glowing active indicator */}
-            <span
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                width: "100%",
-                height: "2px",
-                backgroundColor: "var(--accent-purple)",
-                transform: activeSection === link.id ? "scaleX(1)" : "scaleX(0)",
-                transformOrigin: "left",
-                transition: "transform 0.3s ease",
-                boxShadow: "0 0 8px var(--accent-purple-glow)",
-              }}
-            />
           </a>
         ))}
-      </nav>
 
-      {/* Social / Action Links */}
-      <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-        <a
-          href={personalInfo.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          data-cursor="link"
-          style={{ color: "var(--text-secondary)", fontSize: "1.2rem", transition: "color 0.3s", display: "flex", alignItems: "center" }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
-        >
-          <FiGithub />
-        </a>
-        <a
-          href="https://linkedin.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-cursor="link"
-          style={{ color: "var(--text-secondary)", fontSize: "1.2rem", transition: "color 0.3s", display: "flex", alignItems: "center" }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "#ffffff")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
-        >
-          <FiLinkedin />
-        </a>
-        <a
-          href="#contact"
-          onClick={(e) => handleNavClick(e, "contact")}
-          className="btn-neon"
-          style={{ padding: "8px 20px", fontSize: "0.85rem" }}
-        >
-          <FiMail style={{ fontSize: "1rem" }} />
-          <span>Hire Me</span>
-        </a>
+        {/* Divider */}
+        <div style={{ height: "1px", background: "rgba(255,255,255,0.07)", margin: "8px 0" }} />
+
+        {/* Social + Hire Me */}
+        <div style={{ display: "flex", alignItems: "center", gap: "16px", padding: "8px 16px" }}>
+          <a href={personalInfo.github} target="_blank" rel="noopener noreferrer"
+            style={{ color: "var(--text-secondary)", fontSize: "1.3rem", display: "flex" }}>
+            <FiGithub />
+          </a>
+          <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer"
+            style={{ color: "var(--text-secondary)", fontSize: "1.3rem", display: "flex" }}>
+            <FiLinkedin />
+          </a>
+          <a
+            href="#contact"
+            onClick={(e) => handleNavClick(e, "contact")}
+            className="btn-neon"
+            style={{ padding: "8px 18px", fontSize: "0.82rem", marginLeft: "auto" }}
+          >
+            <FiMail style={{ fontSize: "0.95rem" }} />
+            <span>Hire Me</span>
+          </a>
+        </div>
       </div>
-    </header>
+
+      {/* Scoped styles */}
+      <style>{`
+        .navbar-desktop {
+          display: flex;
+          align-items: center;
+          gap: 28px;
+        }
+        .navbar-hamburger {
+          display: none !important;
+        }
+        /* Hide drawer on desktop */
+        @media (min-width: 769px) {
+          .navbar-drawer { display: none !important; }
+        }
+        @media (max-width: 768px) {
+          .navbar-desktop { display: none !important; }
+          .navbar-hamburger { display: flex !important; }
+        }
+      `}</style>
+    </>
   );
 };

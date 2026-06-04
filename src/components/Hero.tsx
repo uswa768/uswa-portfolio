@@ -88,20 +88,22 @@ export const Hero: React.FC = () => {
 
       {/* Grid container splitting text and 3D */}
       <div
+        className="hero-grid"
         style={{
           display: "grid",
-          gridTemplateColumns: "1.25fr 0.75fr",
+          gridTemplateColumns: "40% 60%",
           alignItems: "center",
-          gap: "80px",
+          gap: "40px",
           width: "100%",
-          paddingTop: "120px", // space for navbar
+          paddingTop: "100px",
         }}
       >
         {/* Left Column: Text Content */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }} className="hero-text-col">
           {/* Status Badges */}
           <div
             ref={badgesRef}
+            className="hero-badges-wrapper"
             style={{
               display: "flex",
               alignItems: "center",
@@ -159,7 +161,7 @@ export const Hero: React.FC = () => {
           </div>
 
           {/* Main Title Heading */}
-          <div style={{ overflow: "hidden" }}>
+          <div className="hero-title-wrapper" style={{ overflow: "hidden" }}>
             <h1
               ref={titleRef}
               style={{
@@ -179,6 +181,7 @@ export const Hero: React.FC = () => {
           {/* Intro Description */}
           <p
             ref={textRef}
+            className="hero-description"
             style={{
               fontSize: "clamp(1rem, 1.2vw, 1.25rem)",
               lineHeight: 1.6,
@@ -192,6 +195,7 @@ export const Hero: React.FC = () => {
           {/* CTA Button Group */}
           <div
             ref={btnGroupRef}
+            className="hero-btn-group"
             style={{
               display: "flex",
               alignItems: "center",
@@ -221,10 +225,11 @@ export const Hero: React.FC = () => {
         {/* Right Column: 3D Canvas Visuals */}
         <div
           ref={canvasWrapperRef}
+          className="hero-canvas-wrapper"
           style={{
             position: "relative",
             width: "100%",
-            height: "clamp(300px, 45vw, 550px)",
+            height: "clamp(380px, 52vw, 620px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -248,13 +253,81 @@ export const Hero: React.FC = () => {
           <ModelCanvas />
         </div>
       </div>
-      
-      {/* Keyframe pulse animation styling */}
+
+      {/* Responsive + keyframe styles */}
       <style>{`
         @keyframes pulse {
           0% { transform: scale(1); opacity: 1; }
           50% { transform: scale(1.4); opacity: 0.5; }
           100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* ── Mobile: custom grid area positioning, text first, then stacked buttons side-by-side with model ── */
+        @media (max-width: 768px) {
+          #hero {
+            padding: 0 6% !important;
+            align-items: center !important;
+            min-height: calc(100vh - 60px) !important;
+          }
+          .hero-grid {
+            display: grid !important;
+            grid-template-columns: 52% 48% !important;
+            grid-template-rows: auto auto auto auto !important;
+            grid-template-areas:
+              "badges badges"
+              "title title"
+              "desc desc"
+              "btns canvas" !important;
+            padding-top: 100px !important;
+            gap: 16px !important;
+            align-items: center !important;
+          }
+          
+          /* Assign Grid Areas */
+          .hero-badges-wrapper {
+            grid-area: badges;
+          }
+          .hero-title-wrapper {
+            grid-area: title;
+          }
+          .hero-description {
+            grid-area: desc;
+            margin: 0 !important;
+          }
+          .hero-btn-group {
+            grid-area: btns;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+            width: 100% !important;
+            margin: 0 !important;
+          }
+          .hero-btn-group button {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+          .hero-canvas-wrapper {
+            grid-area: canvas;
+            height: 190px !important;
+            width: 100% !important;
+            margin: 0 !important;
+            position: relative !important;
+          }
+          /* Remove column flex display on mobile wrapper to prevent override */
+          .hero-text-col {
+            display: contents !important;
+          }
+        }
+
+        /* ── Tablet ── */
+        @media (min-width: 769px) and (max-width: 1024px) {
+          .hero-grid {
+            grid-template-columns: 45% 55% !important;
+            gap: 24px !important;
+          }
+          .hero-canvas-wrapper {
+            height: clamp(340px, 46vw, 500px) !important;
+          }
         }
       `}</style>
     </section>

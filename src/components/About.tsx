@@ -40,6 +40,7 @@ export const About: React.FC = () => {
       y: 50,
       duration: 0.9,
       ease: "power4.out",
+      clearProps: "transform",
     })
     .from(".about-info-card > *", {
       opacity: 0,
@@ -50,12 +51,12 @@ export const About: React.FC = () => {
     }, "-=0.5");
 
     // 3. Stats cards staggered fade-up
-    gsap.from(".about-stat-card", {
+    gsap.from(".about-stat-card-wrapper", {
       opacity: 0,
       y: 50,
       duration: 1.0,
-      stagger: 0.15,
       ease: "power4.out",
+      clearProps: "transform",
       scrollTrigger: {
         trigger: ".about-stats-grid",
         start: "top 90%",
@@ -135,7 +136,7 @@ export const About: React.FC = () => {
       ref={containerRef}
       style={{
         position: "relative",
-        padding: "160px 10%",
+        padding: "100px 10%",
         width: "100%",
         overflow: "hidden",
         backgroundColor: "var(--bg-secondary)",
@@ -153,6 +154,7 @@ export const About: React.FC = () => {
 
       {/* Main Grid */}
       <div
+        className="about-grid"
         style={{
           display: "grid",
           gridTemplateColumns: "1.15fr 0.85fr",
@@ -190,31 +192,37 @@ export const About: React.FC = () => {
             {stats.map((stat, index) => (
               <div
                 key={index}
-                className="glass-card about-stat-card"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "32px 24px",
-                  textAlign: "center",
-                }}
+                className="about-stat-card-wrapper"
+                style={{ width: "100%", height: "100%" }}
               >
-                <span
+                <div
+                  className="glass-card about-stat-card"
                   style={{
-                    fontSize: "2.2rem",
-                    fontWeight: 850,
-                    color: index % 2 === 0 ? "var(--accent-cyan)" : "var(--accent-purple)",
-                    fontFamily: "var(--font-heading)",
-                    marginBottom: "8px",
-                    textShadow: index % 2 === 0 ? "0 0 10px var(--accent-cyan-glow)" : "0 0 10px var(--accent-purple-glow)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "32px 24px",
+                    textAlign: "center",
+                    height: "100%",
                   }}
                 >
-                  {stat.value}
-                </span>
-                <span style={{ fontSize: "0.88rem", color: "var(--text-secondary)", fontWeight: 500 }}>
-                  {stat.label}
-                </span>
+                  <span
+                    style={{
+                      fontSize: "2.2rem",
+                      fontWeight: 850,
+                      color: index % 2 === 0 ? "var(--accent-cyan)" : "var(--accent-purple)",
+                      fontFamily: "var(--font-heading)",
+                      marginBottom: "8px",
+                      textShadow: index % 2 === 0 ? "0 0 10px var(--accent-cyan-glow)" : "0 0 10px var(--accent-purple-glow)",
+                    }}
+                  >
+                    {stat.value}
+                  </span>
+                  <span style={{ fontSize: "0.88rem", color: "var(--text-secondary)", fontWeight: 500 }}>
+                    {stat.label}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
@@ -335,7 +343,7 @@ export const About: React.FC = () => {
       {/* Responsive columns stylesheet */}
       <style>{`
         @media (max-width: 991px) {
-          #about > div:nth-of-type(2) {
+          .about-grid {
             grid-template-columns: 1fr !important;
             gap: 60px !important;
           }
