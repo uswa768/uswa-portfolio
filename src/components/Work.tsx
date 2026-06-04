@@ -15,6 +15,10 @@ const getProjectImage = (id: string) => {
       return "/dashboard_project.png";
     case "crm-portal":
       return "/crm_portal.png";
+    case "our-blooms":
+      return "/our_blooms.png";
+    case "doist-todo":
+      return "/doist_todo.png";
     default:
       return "/dashboard_sales.png";
   }

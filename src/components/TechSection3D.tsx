@@ -70,13 +70,13 @@ export const TechSection3D: React.FC = () => {
           gsap.set(card, { opacity: 0, scale: 0.1 });
         });
 
-        // Create scroll-linked timeline
+        // Create scroll-linked timeline (higher scrub = smoother follow lag)
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: ".tech-content-row",
             start: "top 85%",
             end: "bottom 30%",
-            scrub: 1.2,
+            scrub: 2.2,
           }
         });
 
@@ -85,15 +85,15 @@ export const TechSection3D: React.FC = () => {
           opacity: 1,
           scale: 1.6,
           duration: 1.0,
-          ease: "power1.inOut",
+          ease: "power2.inOut",
         })
         .to(sceneCol, {
           scale: 1.0,
           duration: 1.0,
-          ease: "power1.inOut",
+          ease: "power2.inOut",
         });
 
-        // Language cards fly out from the center of the robot to their native grid positions
+        // Language cards fly out from the center of the robot to their native grid positions (faster duration and stagger)
         cardOffsets.forEach(({ card, dx, dy }, idx) => {
           tl.fromTo(card,
             {
@@ -110,9 +110,9 @@ export const TechSection3D: React.FC = () => {
               y: 0,
               rotation: 0,
               ease: "power2.out",
-              duration: 1.2,
+              duration: 0.6,
             },
-            idx * 0.1
+            idx * 0.04
           );
         });
       });
@@ -160,9 +160,9 @@ export const TechSection3D: React.FC = () => {
                   x: 0,
                   y: 0,
                   rotation: 0,
-                  duration: 1.3,
-                  delay: idx * 0.08,
-                  ease: "power3.out",
+                  duration: 0.7,
+                  delay: idx * 0.04,
+                  ease: "power2.out",
                   clearProps: "all"
                 }
               );
