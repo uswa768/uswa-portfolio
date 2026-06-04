@@ -15,42 +15,27 @@ export const Navbar: React.FC = () => {
   ];
 
   useEffect(() => {
-    const NAVBAR_HEIGHT = 80;
-
-    // Helper: get element's top offset relative to the document (walks offsetParent chain)
-    const getDocumentTop = (el: HTMLElement): number => {
-      let top = 0;
-      let current: HTMLElement | null = el;
-      while (current) {
-        top += current.offsetTop;
-        current = current.offsetParent as HTMLElement | null;
-      }
-      return top;
-    };
+    const NAVBAR_HEIGHT = 82; // px — matches the fixed header height
 
     const getActiveSection = () => {
-      const scrollY = window.scrollY;
-
-      // Collect all section offsets relative to the document
-      const sectionOffsets = navLinks
+      // Use getBoundingClientRect() — always accurate even when GSAP pins a section
+      // (pinned elements get position:fixed, breaking offsetTop chains)
+      const sectionRects = navLinks
         .map((link) => {
           const el = document.getElementById(link.id);
           if (!el) return null;
-          return { id: link.id, top: getDocumentTop(el) };
+          return { id: link.id, top: el.getBoundingClientRect().top };
         })
         .filter(Boolean) as { id: string; top: number }[];
 
-      // Sort by top ascending (just in case)
-      sectionOffsets.sort((a, b) => a.top - b.top);
-
-      // Find the last section whose top is <= current scroll + navbar height + a small buffer
-      let current = sectionOffsets[0]?.id ?? "hero";
-      for (const section of sectionOffsets) {
-        if (scrollY + NAVBAR_HEIGHT + 10 >= section.top) {
-          current = section.id;
+      // The active section is the last one whose top edge is at or above the navbar bottom
+      let active = sectionRects[0]?.id ?? "hero";
+      for (const section of sectionRects) {
+        if (section.top <= NAVBAR_HEIGHT + 10) {
+          active = section.id;
         }
       }
-      return current;
+      return active;
     };
 
     const handleScroll = () => {
@@ -58,7 +43,7 @@ export const Navbar: React.FC = () => {
       setActiveSection(getActiveSection());
     };
 
-    // Run once on mount to set correct initial state
+    // Run once on mount
     handleScroll();
 
     window.addEventListener("scroll", handleScroll, { passive: true });

@@ -176,7 +176,8 @@ export const Work: React.FC = () => {
         position: "relative",
         width: "100%",
         height: "100vh",
-        overflow: "hidden",
+        overflowX: "hidden",   // horizontal clip for the sliding cards; NOT overflow:hidden (clips heading)
+        overflowY: "visible",
         backgroundColor: "var(--bg-primary)",
         display: "flex",
         flexDirection: "column",
@@ -187,8 +188,8 @@ export const Work: React.FC = () => {
       <div className="radial-glow glow-indigo" style={{ opacity: 0.1, left: "70%" }} />
 
       {/* Section Title */}
-      <div style={{ padding: "0 10%", marginBottom: "40px", paddingTop: "8px" }}>
-        <h2 style={{ fontSize: "clamp(2rem, 3.5vw, 3rem)", fontWeight: 800, overflow: "visible", lineHeight: 1.2 }}>
+      <div style={{ padding: "0 10%", marginBottom: "40px", paddingTop: "0" }}>
+        <h2 style={{ fontSize: "clamp(2rem, 3.5vw, 3rem)", fontWeight: 800, lineHeight: 1.3, overflow: "visible" }}>
           Featured <span className="text-gradient-indigo">Projects</span>
         </h2>
         <div style={{ width: "50px", height: "4px", backgroundColor: "var(--accent-indigo)", marginTop: "12px", borderRadius: "2px" }} />
