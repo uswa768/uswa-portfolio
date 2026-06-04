@@ -14,52 +14,43 @@ export const Navbar: React.FC = () => {
   ];
 
   useEffect(() => {
+    const NAVBAR_HEIGHT = 80;
+
+    const getActiveSection = () => {
+      const scrollY = window.scrollY;
+
+      // Collect all section offsets
+      const sectionOffsets = navLinks
+        .map((link) => {
+          const el = document.getElementById(link.id);
+          if (!el) return null;
+          return { id: link.id, top: el.offsetTop };
+        })
+        .filter(Boolean) as { id: string; top: number }[];
+
+      // Sort by top ascending (just in case)
+      sectionOffsets.sort((a, b) => a.top - b.top);
+
+      // Find the last section whose top is <= current scroll + navbar height + a small buffer
+      let current = sectionOffsets[0]?.id ?? "hero";
+      for (const section of sectionOffsets) {
+        if (scrollY + NAVBAR_HEIGHT + 10 >= section.top) {
+          current = section.id;
+        }
+      }
+      return current;
+    };
+
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
-
-      // Fallback for the last section (contact): if we're near the bottom of the page,
-      // force-activate "contact" regardless of IntersectionObserver margins.
-      const distFromBottom = document.body.scrollHeight - window.scrollY - window.innerHeight;
-      if (distFromBottom < 80) {
-        setActiveSection("contact");
-      }
+      setActiveSection(getActiveSection());
     };
+
+    // Run once on mount to set correct initial state
+    handleScroll();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-
-    // IntersectionObserver — fires whenever 10% of a section enters viewport.
-    // rootMargin top=-60px accounts for the fixed navbar height.
-    // rootMargin bottom=0px so even short sections at page-end can trigger.
-    const observerOptions = {
-      root: null,
-      rootMargin: "-60px 0px 0px 0px",
-      threshold: [0, 0.1, 0.25],
-    };
-
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      // Pick the entry with the largest intersection ratio that is currently intersecting
-      const intersecting = entries
-        .filter((e) => e.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-
-      if (intersecting.length > 0) {
-        setActiveSection(intersecting[0].target.id);
-      }
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    navLinks.forEach((link) => {
-      const element = document.getElementById(link.id);
-      if (element) {
-        observer.observe(element);
-      }
-    });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      observer.disconnect();
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
