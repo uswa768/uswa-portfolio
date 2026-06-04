@@ -187,8 +187,8 @@ export const Work: React.FC = () => {
       <div className="radial-glow glow-indigo" style={{ opacity: 0.1, left: "70%" }} />
 
       {/* Section Title */}
-      <div style={{ padding: "0 10%", marginBottom: "40px" }}>
-        <h2 style={{ fontSize: "clamp(2rem, 3.5vw, 3rem)", fontWeight: 800 }}>
+      <div style={{ padding: "0 10%", marginBottom: "40px", paddingTop: "8px" }}>
+        <h2 style={{ fontSize: "clamp(2rem, 3.5vw, 3rem)", fontWeight: 800, overflow: "visible", lineHeight: 1.2 }}>
           Featured <span className="text-gradient-indigo">Projects</span>
         </h2>
         <div style={{ width: "50px", height: "4px", backgroundColor: "var(--accent-indigo)", marginTop: "12px", borderRadius: "2px" }} />

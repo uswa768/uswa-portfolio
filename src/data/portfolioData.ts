@@ -43,8 +43,8 @@ export const personalInfo: PersonalInfo = {
   title: "Frontend Developer & Student",
   subtitle: "Building modern, high-performance, and visually immersive user experiences.",
   bio: "I am a passionate frontend developer and student focusing on creating highly responsive, interactive, and beautiful websites. By blending modern UI/UX trends with clean code architectures, I aim to build products that deliver exceptional performance and stunning aesthetics.",
-  email: "uswadev@example.com",
-  github: "https://github.com/uswa-dev",
+  email: "uswaasif768@gmail.com",
+  github: "https://github.com/uswa768",
   linkedin: "https://linkedin.com/in/uswa-dev",
   twitter: "https://twitter.com/uswa_dev",
 };
@@ -53,7 +53,7 @@ export const stats = [
   { value: "15+", label: "Projects Completed" },
   { value: "2+", label: "Years Self-Learning" },
   { value: "99%", label: "Client Satisfaction" },
-  { value: "1.2k+", label: "Git Commits" },
+  { value: "500+", label: "Git Commits" },
 ];
 
 export const skillCategories: SkillCategory[] = [

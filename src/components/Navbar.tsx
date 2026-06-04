@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FiGithub, FiLinkedin, FiMail } from "react-icons/fi";
+import { personalInfo } from "../data/portfolioData";
 
 export const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("hero");
@@ -16,15 +17,26 @@ export const Navbar: React.FC = () => {
   useEffect(() => {
     const NAVBAR_HEIGHT = 80;
 
+    // Helper: get element's top offset relative to the document (walks offsetParent chain)
+    const getDocumentTop = (el: HTMLElement): number => {
+      let top = 0;
+      let current: HTMLElement | null = el;
+      while (current) {
+        top += current.offsetTop;
+        current = current.offsetParent as HTMLElement | null;
+      }
+      return top;
+    };
+
     const getActiveSection = () => {
       const scrollY = window.scrollY;
 
-      // Collect all section offsets
+      // Collect all section offsets relative to the document
       const sectionOffsets = navLinks
         .map((link) => {
           const el = document.getElementById(link.id);
           if (!el) return null;
-          return { id: link.id, top: el.offsetTop };
+          return { id: link.id, top: getDocumentTop(el) };
         })
         .filter(Boolean) as { id: string; top: number }[];
 
@@ -157,7 +169,7 @@ export const Navbar: React.FC = () => {
       {/* Social / Action Links */}
       <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
         <a
-          href="https://github.com/uswa-dev"
+          href={personalInfo.github}
           target="_blank"
           rel="noopener noreferrer"
           data-cursor="link"
