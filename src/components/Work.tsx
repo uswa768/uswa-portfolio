@@ -10,19 +10,19 @@ gsap.registerPlugin(ScrollTrigger);
 const getProjectImage = (id: string) => {
   switch (id) {
     case "dashboard-sales":
-      return "/dashboard_sales.png";
+      return "/projects/dashboard_sales.png";
     case "dashboard-project":
-      return "/dashboard_project.png";
+      return "/projects/dashboard_project.png";
     case "crm-portal":
-      return "/crm_portal.png";
+      return "/projects/crm_portal.png";
     case "our-blooms":
-      return "/our_blooms.png";
+      return "/projects/our_blooms.png";
     case "doist-todo":
-      return "/doist_todo.png";
+      return "/projects/doist_todo.png";
     case "wedding-site":
-      return "/wedding_site.png";
+      return "/projects/wedding_site.png";
     default:
-      return "/dashboard_sales.png";
+      return "/projects/dashboard_sales.png";
   }
 };
 
@@ -236,19 +236,38 @@ export const Work: React.FC = () => {
                 paddingLeft: "22px",
               }}
             >
-              {/* Year */}
-              <span
-                style={{
-                  fontFamily: "var(--font-heading)",
-                  fontSize: "1.8rem",
-                  fontWeight: 900,
-                  color: project.color,
-                  letterSpacing: "0.05em",
-                  lineHeight: 1,
-                }}
-              >
-                {getProjectYear(project.id)}
-              </span>
+              {/* Year & Tag */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px", alignItems: "flex-start" }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-heading)",
+                    fontSize: "1.8rem",
+                    fontWeight: 900,
+                    color: project.color,
+                    letterSpacing: "0.05em",
+                    lineHeight: 1,
+                  }}
+                >
+                  {getProjectYear(project.id)}
+                </span>
+                {project.tags && project.tags[0] && (
+                  <span
+                    style={{
+                      fontSize: "0.72rem",
+                      fontWeight: 700,
+                      padding: "4px 8px",
+                      borderRadius: "6px",
+                      backgroundColor: `${project.color}15`,
+                      color: project.color,
+                      border: `1px solid ${project.color}30`,
+                      letterSpacing: "0.03em",
+                      display: "inline-block"
+                    }}
+                  >
+                    {project.tags[0]}
+                  </span>
+                )}
+              </div>
 
               {/* Title */}
               <h3
@@ -332,12 +351,8 @@ export const Work: React.FC = () => {
               style={{
                 flex: 1,
                 height: "100%",
-                borderRadius: "16px",
-                overflow: "hidden",
                 position: "relative",
-                backgroundColor: "rgba(5, 10, 25, 0.9)",
-                border: "1px solid rgba(255, 255, 255, 0.07)",
-                boxShadow: `0 25px 60px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px ${project.color}18`,
+                overflow: "hidden",
               }}
             >
               <img
@@ -347,12 +362,11 @@ export const Work: React.FC = () => {
                 style={{
                   width: "100%",
                   height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "center top",
+                  objectFit: "contain",
+                  objectPosition: "center center",
                   filter: "blur(12px) grayscale(100%)",
                   opacity: 0.4,
                   transition: "filter 0.3s ease",
-                  padding: "8px",
                 }}
               />
             </div>
