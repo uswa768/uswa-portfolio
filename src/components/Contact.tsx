@@ -22,9 +22,9 @@ export const Contact: React.FC = () => {
   };
 
   const socials = [
-    { icon: FiMail,     label: 'Email',    sub: personalInfo.email,               href: `mailto:${personalInfo.email}` },
-    { icon: FiGithub,   label: 'GitHub',   sub: 'github.com/uswa-dev',            href: personalInfo.github,   target: '_blank' },
-    { icon: FiLinkedin, label: 'LinkedIn', sub: 'linkedin.com/in/uswa-dev',        href: personalInfo.linkedin, target: '_blank' },
+    { icon: FiMail,     label: 'Email',    sub: personalInfo.email,                                         href: `mailto:${personalInfo.email}` },
+    { icon: FiGithub,   label: 'GitHub',   sub: personalInfo.github.replace('https://', ''),                href: personalInfo.github,   target: '_blank' },
+    { icon: FiLinkedin, label: 'LinkedIn', sub: personalInfo.linkedin.replace('https://', ''),              href: personalInfo.linkedin, target: '_blank' },
   ];
 
   return (

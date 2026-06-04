@@ -176,20 +176,22 @@ export const Work: React.FC = () => {
         position: "relative",
         width: "100%",
         height: "100vh",
-        overflowX: "hidden",   // horizontal clip for the sliding cards; NOT overflow:hidden (clips heading)
-        overflowY: "visible",
+        overflow: "hidden",
         backgroundColor: "var(--bg-primary)",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-        padding: "80px 0",
+        justifyContent: "flex-start",
+        // paddingTop must clear the fixed navbar (80px) + breathing room
+        // so the heading is never hidden behind the navbar when GSAP pins this section
+        paddingTop: "110px",
+        paddingBottom: "40px",
       }}
     >
       <div className="radial-glow glow-indigo" style={{ opacity: 0.1, left: "70%" }} />
 
       {/* Section Title */}
-      <div style={{ padding: "0 10%", marginBottom: "40px", paddingTop: "0" }}>
-        <h2 style={{ fontSize: "clamp(2rem, 3.5vw, 3rem)", fontWeight: 800, lineHeight: 1.3, overflow: "visible" }}>
+      <div style={{ padding: "0 10%", marginBottom: "36px" }}>
+        <h2 style={{ fontSize: "clamp(2rem, 3.5vw, 3rem)", fontWeight: 800, lineHeight: 1.3 }}>
           Featured <span className="text-gradient-indigo">Projects</span>
         </h2>
         <div style={{ width: "50px", height: "4px", backgroundColor: "var(--accent-indigo)", marginTop: "12px", borderRadius: "2px" }} />

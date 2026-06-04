@@ -47,6 +47,12 @@ html, body {
   cursor: none; /* Hide default cursor to use custom fluid cursor */
 }
 
+/* Ensure all interactive elements remain clickable with custom cursor active */
+a, button, [role="button"], input, textarea, select, label {
+  cursor: none;
+  pointer-events: auto;
+}
+
 /* Scrollbar Customization */
 ::-webkit-scrollbar {
   width: 8px;
