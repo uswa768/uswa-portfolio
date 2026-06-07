@@ -187,11 +187,10 @@ export const Work: React.FC = () => {
       <div className="radial-glow glow-indigo" style={{ opacity: 0.1, left: "70%" }} />
 
       {/* Section Title */}
-      <div style={{ padding: "0 10%", marginBottom: "36px" }}>
+      <div className="work-section-title" style={{ padding: "0 10%", marginBottom: "36px" }}>
         <h2 style={{ fontSize: "clamp(2rem, 3.5vw, 3rem)", fontWeight: 800, lineHeight: 1.3 }}>
           Featured <span className="text-gradient-indigo">Projects</span>
         </h2>
-        <div style={{ width: "50px", height: "4px", backgroundColor: "var(--accent-indigo)", marginTop: "12px", borderRadius: "2px" }} />
       </div>
 
       {/* Projects Horizontal Wrapper */}
@@ -379,7 +378,11 @@ export const Work: React.FC = () => {
         @media (max-width: 991px) {
           #work {
             height: auto !important;
-            padding: 120px 8% !important;
+            padding: 60px 8% !important;
+          }
+          .work-section-title {
+            padding: 0 !important;
+            margin-bottom: 24px !important;
           }
           .work-horizontal-container {
             flex-direction: column !important;
@@ -401,6 +404,11 @@ export const Work: React.FC = () => {
           .work-card-wrapper > div:nth-of-type(2) {
             width: 100% !important;
             height: 250px !important;
+          }
+        }
+        @media (max-width: 768px) {
+          #work {
+            padding: 40px 6% 30px !important;
           }
         }
       `}</style>

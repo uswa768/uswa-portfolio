@@ -40,9 +40,9 @@ export interface PersonalInfo {
 
 export const personalInfo: PersonalInfo = {
   name: "Uswa",
-  title: "Frontend Developer & Student",
-  subtitle: "Building modern, high-performance, and visually immersive user experiences.",
-  bio: "I am a passionate frontend developer and student focusing on creating highly responsive, interactive, and beautiful websites. By blending modern UI/UX trends with clean code architectures, I aim to build products that deliver exceptional performance and stunning aesthetics.",
+  title: "Frontend Developer",
+  subtitle: "I build clean, fast, and visually sharp web interfaces.",
+  bio: "I'm a Computer Science undergrad at Punjab University with a genuine interest in frontend development. I started learning on my own before it became part of my degree, and somewhere along the way, building interfaces became less of a hobby and more of a direction.",
   email: "uswaasif768@gmail.com",
   github: "https://github.com/uswa768",
   linkedin: "https://linkedin.com/in/uswa-dev",
@@ -50,10 +50,10 @@ export const personalInfo: PersonalInfo = {
 };
 
 export const stats = [
-  { value: "15+", label: "Projects Completed" },
-  { value: "2+", label: "Years Self-Learning" },
-  { value: "99%", label: "Client Satisfaction" },
-  { value: "500+", label: "Git Commits" },
+  { value: "15+", label: "Projects Built" },
+  { value: "2+", label: "Years of Self-Learning" },
+  { value: "1", label: "Internship" },
+  { value: "500+", label: "Commits on GitHub" },
 ];
 
 export const skillCategories: SkillCategory[] = [
@@ -90,8 +90,8 @@ export const projects: Project[] = [
   {
     id: "crm-portal",
     title: "CRM SaaS",
-    description: "A modern, high-performance CRM SaaS platform with comprehensive customer relationship management, task scaling, and real-time WebSocket integration for seamless team collaboration.",
-    tags: ["Internship Project", "Engineering", "CRM Portal"],
+    description: "A CRM platform built during an internship that handles customer management, task tracking, and team collaboration with real-time WebSocket updates. Worked on the frontend using React, JavaScript, TailwindCSS, GSAP, and Framer Motion for performance and smooth interactions.",
+    tags: ["Internship Project", "2026"],
     tech: ["React", "JavaScript", "TailwindCSS", "GSAP", "Framer Motion"],
     link: "https://crm-saas-flame.vercel.app/",
     github: "https://github.com/raheelanjum786/crm-saas",
@@ -100,8 +100,8 @@ export const projects: Project[] = [
   {
     id: "dashboard-project",
     title: "Project Workspace Kanban",
-    description: "An interactive project management interface modeled after task boards, supporting drag-and-drop workspace cards and status sorting.",
-    tags: ["Practice Purpose Project", "Kanban", "Workspace"],
+    description: "A Kanban-style task board I built to get hands-on with drag-and-drop interactions and state management. Clean UI, status-based card sorting, and smooth transitions throughout.",
+    tags: ["Practice Project", "2026"],
     tech: ["React", "JavaScript", "TailwindCSS", "Framer Motion"],
     link: "https://dashboard-one-dusky-one.vercel.app/",
     github: "https://github.com/uswa768/Dashboard-One",
@@ -129,7 +129,7 @@ export const projects: Project[] = [
   },
   {
     id: "wedding-site",
-    title: "Jenny & Jason Wedding Invitation",
+    title: "Jenny and Jason Wedding Invitation",
     description: "A gorgeous, fully responsive wedding invitation site featuring interactive RSVP forms, venue location routes, and a personal couples timeline.",
     tags: ["Practice Purpose Project", "Invitation", "Responsive"],
     tech: ["HTML5", "CSS3", "JavaScript"],
@@ -151,21 +151,21 @@ export const projects: Project[] = [
 
 export const educationTimeline: TimelineItem[] = [
   {
-    year: "2024 - Present",
-    title: "BS Computer Science (BSCS)",
-    subtitle: "Punjab University — Continue",
-    description: "Deepening my knowledge of computational theory, algorithms, software architectures, and modern web systems.",
+    year: "2024 to Present",
+    title: "BS Computer Science",
+    subtitle: "Punjab University",
+    description: "Studying algorithms, data structures, software architecture, and web systems. Applying coursework directly through personal and collaborative projects.",
   },
   {
-    year: "2022 - 2024",
-    title: "F.Sc. (Intermediate)",
+    year: "2022 to 2024",
+    title: "F.Sc. Pre-Medical",
     subtitle: "A Grade",
-    description: "Completed college pre-engineering credentials focusing on Mathematics, Physics, and Computer Sciences.",
+    description: "Completed intermediate with focus on Biology, Chemistry, and Physics, then pivoted to Computer Science and never looked back.",
   },
   {
-    year: "2020 - 2022",
+    year: "2020 to 2022",
     title: "Matriculation",
     subtitle: "A+ Grade",
-    description: "Acquired secondary school certificate with top grades in core science and mathematics curriculums.",
+    description: "Strong foundation in science and mathematics, marking the start of a pattern of taking academics seriously.",
   },
 ];

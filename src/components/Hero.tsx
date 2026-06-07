@@ -9,14 +9,13 @@ export const Hero: React.FC = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const textRef = useRef<HTMLParagraphElement>(null);
   const btnGroupRef = useRef<HTMLDivElement>(null);
-  const badgesRef = useRef<HTMLDivElement>(null);
   const canvasWrapperRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
     // Initial states for fade-in animations
-    gsap.set([titleRef.current, textRef.current, btnGroupRef.current, badgesRef.current, canvasWrapperRef.current], {
+    gsap.set([titleRef.current, textRef.current, btnGroupRef.current, canvasWrapperRef.current], {
       opacity: 0,
     });
 
@@ -31,24 +30,18 @@ export const Hero: React.FC = () => {
       duration: 1,
       startAt: { y: 40 },
     }, "-=1.0")
-    .to(badgesRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.8,
-      startAt: { y: 20 },
-    }, "-=0.7")
     .to(textRef.current, {
       opacity: 1,
       y: 0,
       duration: 0.8,
       startAt: { y: 20 },
-    }, "-=0.6")
+    }, "-=0.7")
     .to(btnGroupRef.current, {
       opacity: 1,
       y: 0,
       duration: 0.8,
       startAt: { y: 20 },
-    }, "-=0.5");
+    }, "-=0.6");
   }, { scope: containerRef });
 
   const handleScrollTo = (id: string) => {
@@ -100,66 +93,6 @@ export const Hero: React.FC = () => {
       >
         {/* Left Column: Text Content */}
         <div style={{ display: "flex", flexDirection: "column", gap: "24px" }} className="hero-text-col">
-          {/* Status Badges */}
-          <div
-            ref={badgesRef}
-            className="hero-badges-wrapper"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              flexWrap: "wrap",
-            }}
-          >
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "6px 14px",
-                borderRadius: "9999px",
-                fontSize: "0.75rem",
-                fontWeight: 600,
-                fontFamily: "var(--font-heading)",
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
-                background: "rgba(6, 182, 212, 0.08)",
-                border: "1px solid rgba(6, 182, 212, 0.25)",
-                color: "var(--accent-cyan)",
-                boxShadow: "0 0 10px rgba(6, 182, 212, 0.1)",
-              }}
-            >
-              <span
-                style={{
-                  width: "6px",
-                  height: "6px",
-                  backgroundColor: "var(--accent-cyan)",
-                  borderRadius: "50%",
-                  animation: "pulse 2s infinite",
-                  display: "inline-block",
-                }}
-              />
-              Available for Projects
-            </span>
-            <span
-              style={{
-                display: "inline-flex",
-                padding: "6px 14px",
-                borderRadius: "9999px",
-                fontSize: "0.75rem",
-                fontWeight: 600,
-                fontFamily: "var(--font-heading)",
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
-                background: "rgba(139, 92, 246, 0.08)",
-                border: "1px solid rgba(139, 92, 246, 0.25)",
-                color: "var(--accent-purple)",
-              }}
-            >
-              CS Undergrad Student
-            </span>
-          </div>
-
           {/* Main Title Heading */}
           <div className="hero-title-wrapper" style={{ overflow: "hidden" }}>
             <h1
@@ -189,7 +122,7 @@ export const Hero: React.FC = () => {
               maxWidth: "580px",
             }}
           >
-            I craft immersive, high-performance web interfaces with rich animations, premium glassmorphism styles, and clean code. Blending my academic studies with cutting-edge frontend libraries, I turn concepts into digital realities.
+            I build clean, fast, and visually sharp web interfaces. Currently studying Computer Science and putting theory into practice, one component at a time. React, Tailwind, GSAP, and a love for details that actually matter.
           </p>
 
           {/* CTA Button Group */}
@@ -205,6 +138,7 @@ export const Hero: React.FC = () => {
             }}
           >
             <button
+              type="button"
               onClick={() => handleScrollTo("work")}
               className="btn-neon"
               data-cursor="project"
@@ -213,6 +147,7 @@ export const Hero: React.FC = () => {
               <FiArrowRight style={{ fontSize: "1.1rem" }} />
             </button>
             <button
+              type="button"
               onClick={() => handleScrollTo("contact")}
               className="btn-glass"
               data-cursor="link"
@@ -272,9 +207,8 @@ export const Hero: React.FC = () => {
           .hero-grid {
             display: grid !important;
             grid-template-columns: 52% 48% !important;
-            grid-template-rows: auto auto auto auto !important;
+            grid-template-rows: auto auto auto !important;
             grid-template-areas:
-              "badges badges"
               "title title"
               "desc desc"
               "btns canvas" !important;
@@ -284,9 +218,6 @@ export const Hero: React.FC = () => {
           }
           
           /* Assign Grid Areas */
-          .hero-badges-wrapper {
-            grid-area: badges;
-          }
           .hero-title-wrapper {
             grid-area: title;
           }

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="256" height="256">
+  <rect width="32" height="32" rx="6" fill="#000000"/>
+  <!-- Top triangle -->
+  <path d="M8 4h16L8 12z" fill="#ff007f"/>
+  <!-- Middle triangle -->
+  <path d="M8 12h16v8z" fill="#7f00ff"/>
+  <!-- Bottom parallelogram -->
+  <path d="M16 20h8l-8 8H8z" fill="#00f0ff"/>
+</svg>

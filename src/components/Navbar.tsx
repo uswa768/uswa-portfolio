@@ -2,19 +2,21 @@ import React, { useState, useEffect, useRef } from "react";
 import { FiGithub, FiLinkedin, FiMail, FiMenu, FiX } from "react-icons/fi";
 import { personalInfo } from "../data/portfolioData";
 
+const navLinks = [
+  { id: "hero", label: "Home" },
+  { id: "about", label: "About" },
+  { id: "tech-3d", label: "Tech" },
+  { id: "work", label: "Projects" },
+  { id: "contact", label: "Contact" },
+];
+
 export const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("hero");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  const navLinks = [
-    { id: "hero", label: "Home" },
-    { id: "about", label: "About" },
-    { id: "tech-3d", label: "Tech" },
-    { id: "work", label: "Projects" },
-    { id: "contact", label: "Contact" },
-  ];
+  // navLinks moved to module scope
 
   useEffect(() => {
     const NAVBAR_HEIGHT = 82;
@@ -190,6 +192,7 @@ export const Navbar: React.FC = () => {
 
         {/* ── Mobile Hamburger Button ── */}
         <button
+          type="button"
           className="navbar-hamburger"
           onClick={() => setMenuOpen((o) => !o)}
           aria-label="Toggle menu"

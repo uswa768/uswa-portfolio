@@ -40,7 +40,7 @@ const App: React.FC = () => {
             <div>
               <span style={{ fontFamily: "var(--font-heading)", fontWeight: 900, fontSize: "1.4rem", color: "#fff", letterSpacing: "-0.02em" }}>USWA</span>
               <p style={{ marginTop: "8px", color: "var(--text-secondary)", fontSize: "0.88rem", lineHeight: 1.6, maxWidth: "260px" }}>
-                Frontend developer crafting immersive, high-performance web experiences.
+                Frontend developer building clean, fast web experiences.
               </p>
             </div>
 
@@ -125,6 +125,9 @@ const App: React.FC = () => {
               flex-direction: column;
               align-items: flex-start;
               gap: 4px;
+            }
+            footer > div {
+              padding: 24px 6% 24px !important;
             }
           }
           @media (max-width: 480px) {

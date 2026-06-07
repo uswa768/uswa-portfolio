@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import { personalInfo } from '../data/portfolioData';
 import { FiMail, FiGithub, FiLinkedin, FiSend, FiArrowRight } from 'react-icons/fi';
 
+const socials = [
+  { icon: FiMail,     label: 'Email',    sub: personalInfo.email,                                         href: `mailto:${personalInfo.email}` },
+  { icon: FiGithub,   label: 'GitHub',   sub: personalInfo.github.replace('https://', ''),                href: personalInfo.github,   target: '_blank' },
+  { icon: FiLinkedin, label: 'LinkedIn', sub: personalInfo.linkedin.replace('https://', ''),              href: personalInfo.linkedin, target: '_blank' },
+];
+
 export const Contact: React.FC = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
@@ -11,21 +17,23 @@ export const Contact: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
 
-    setStatus('sending');
-    await new Promise((r) => setTimeout(r, 1500));
+    const subject = encodeURIComponent(`Message from ${formData.name}`);
+    const body = encodeURIComponent(
+      `Hi Uswa,\n\n${formData.message}\n\n---\nFrom: ${formData.name}\nReply to: ${formData.email}`
+    );
+
+    // Opens the visitor's default email app with To, Subject & Body pre-filled
+    window.location.href = `mailto:${personalInfo.email}?subject=${subject}&body=${body}`;
+
     setStatus('success');
     setFormData({ name: '', email: '', message: '' });
   };
 
-  const socials = [
-    { icon: FiMail,     label: 'Email',    sub: personalInfo.email,                                         href: `mailto:${personalInfo.email}` },
-    { icon: FiGithub,   label: 'GitHub',   sub: personalInfo.github.replace('https://', ''),                href: personalInfo.github,   target: '_blank' },
-    { icon: FiLinkedin, label: 'LinkedIn', sub: personalInfo.linkedin.replace('https://', ''),              href: personalInfo.linkedin, target: '_blank' },
-  ];
+  // socials definition moved to module scope
 
   return (
     <section id="contact" style={{ position: 'relative', padding: 'clamp(80px, 12vw, 140px) clamp(20px, 8%, 100px)', backgroundColor: 'var(--bg-primary)', overflow: 'hidden' }}>
@@ -39,7 +47,7 @@ export const Contact: React.FC = () => {
       <div style={{ position: 'relative', maxWidth: '1100px', margin: '0 auto' }}>
 
         {/* ── Header ── */}
-        <div style={{ marginBottom: '72px', textAlign: 'center' }}>
+        <div className="contact-header" style={{ marginBottom: '72px', textAlign: 'center' }}>
           <span style={{ display: 'inline-block', fontSize: '0.8rem', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--accent-cyan)', marginBottom: '16px' }}>
             Contact
           </span>
@@ -50,17 +58,17 @@ export const Contact: React.FC = () => {
             </span>
           </h2>
           <p style={{ marginTop: '16px', color: 'var(--text-secondary)', fontSize: '1rem', maxWidth: '500px', margin: '16px auto 0', lineHeight: 1.7 }}>
-            Have a project in mind or want to say hi? Fill out the form and I'll get back to you within 24 hours.
+            Open to freelance work, collaborations, or just a conversation about a project you're thinking about. Fill out the form and I'll get back to you within 24 hours.
           </p>
         </div>
-
+ 
         {/* ── Grid: left info + right form ── */}
         <div className="contact-grid">
-
+ 
           {/* Left — info cards */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.75, marginBottom: '8px' }}>
-              I'm currently open to freelance work and exciting collaborations. Whether it's a new website, a UI revamp, or a full-stack project — let's build something great.
+              Whether it's building something from scratch, cleaning up an existing UI, or helping bring a design to life, I'm interested. Reach out through the form or directly on any of the platforms below.
             </p>
 
             {socials.map(({ icon: Icon, label, sub, href, target }) => (
@@ -93,19 +101,19 @@ export const Contact: React.FC = () => {
                 </div>
                 <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', fontWeight: 700, color: '#fff' }}>Message Sent!</h3>
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Thanks for reaching out. I'll get back to you soon.</p>
-                <button onClick={() => setStatus('idle')} className="contact-reset-btn">Send Another</button>
+                <button type="button" onClick={() => setStatus('idle')} className="contact-reset-btn">Send Another</button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }} className="contact-name-email-row">
                   <FormField label="Name">
-                    <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Your name" required style={inputStyle} className="contact-input"
+                    <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Your name" aria-label="Name" required style={inputStyle} className="contact-input"
                       onFocus={e => { e.currentTarget.style.borderColor = 'var(--accent-cyan)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(6,182,212,0.1)'; }}
                       onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; }}
                     />
                   </FormField>
                   <FormField label="Email">
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="your@email.com" required style={inputStyle} className="contact-input"
+                    <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="your@email.com" aria-label="Email" required style={inputStyle} className="contact-input"
                       onFocus={e => { e.currentTarget.style.borderColor = 'var(--accent-cyan)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(6,182,212,0.1)'; }}
                       onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; }}
                     />
@@ -113,21 +121,15 @@ export const Contact: React.FC = () => {
                 </div>
 
                 <FormField label="Message">
-                  <textarea name="message" value={formData.message} onChange={handleChange} placeholder="Tell me about your project..." required rows={5} style={{ ...inputStyle, resize: 'none' }} className="contact-input"
+                  <textarea name="message" value={formData.message} onChange={handleChange} placeholder="Tell me about your project..." aria-label="Message" required rows={5} style={{ ...inputStyle, resize: 'none' }} className="contact-input"
                     onFocus={e => { e.currentTarget.style.borderColor = 'var(--accent-cyan)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(6,182,212,0.1)'; }}
                     onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; }}
                   />
                 </FormField>
 
-                <button type="submit" disabled={status === 'sending'} className="contact-submit-btn" data-cursor="link">
-                  {status === 'sending' ? (
-                    <span className="contact-spinner" />
-                  ) : (
-                    <>
-                      <span>Send Message</span>
-                      <FiSend size={16} />
-                    </>
-                  )}
+                <button type="submit" className="contact-submit-btn" data-cursor="link">
+                  <span>Send Message</span>
+                  <FiSend size={16} />
                 </button>
               </form>
             )}
@@ -282,6 +284,14 @@ export const Contact: React.FC = () => {
         }
 
         /* Responsive: stack name/email on mobile */
+        @media (max-width: 768px) {
+          #contact {
+            padding: 40px 6% !important;
+          }
+          .contact-header {
+            margin-bottom: 32px !important;
+          }
+        }
         @media (max-width: 520px) {
           .contact-name-email-row {
             grid-template-columns: 1fr !important;

@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import { personalInfo, stats, educationTimeline } from "../data/portfolioData";
-import { FiBookOpen } from "react-icons/fi";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -149,7 +148,6 @@ export const About: React.FC = () => {
         <h2 style={{ fontSize: "clamp(2rem, 3.5vw, 3rem)", fontWeight: 800 }}>
           About <span className="text-gradient-cyan">My Journey</span>
         </h2>
-        <div style={{ width: "50px", height: "4px", backgroundColor: "var(--accent-cyan)", marginTop: "12px", borderRadius: "2px" }} />
       </div>
 
       {/* Main Grid */}
@@ -170,13 +168,13 @@ export const About: React.FC = () => {
             style={{ borderLeft: "4px solid var(--accent-cyan)", padding: "32px" }}
           >
             <h3 style={{ marginBottom: "20px", fontSize: "1.45rem", color: "#ffffff", fontWeight: 700 }}>
-              Student by Day, Frontend Sculptor by Night
+              CS Student. Frontend Developer. Detail Obsessive.
             </h3>
             <p style={{ color: "var(--text-secondary)", lineHeight: 1.7, marginBottom: "20px", fontSize: "1.02rem" }}>
               {personalInfo.bio}
             </p>
             <p style={{ color: "var(--text-secondary)", lineHeight: 1.7, fontSize: "1.02rem" }}>
-              Currently completing my Computer Science undergrad studies, I bridge the gap between academic computational theory and frontend arts. I love working with shadows, interactive 3D, physics-based UI, and vector animations.
+              I work mostly with React and Tailwind, and I've been exploring animation libraries like GSAP and Framer Motion to add life to things that would otherwise just sit still. I care about code that's readable, UIs that make sense, and projects that actually get finished.
             </p>
           </div>
 
@@ -242,7 +240,6 @@ export const About: React.FC = () => {
               marginBottom: "8px",
             }}
           >
-            <FiBookOpen style={{ color: "var(--accent-cyan)" }} />
             Education & Milestones
           </h3>
 
